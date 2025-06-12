@@ -12,10 +12,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download latest Flutter SDK (stable)
+      - name: Download latest stable Flutter SDK
         run: |
-          wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.22.1-stable.tar.xz
-          tar xf flutter_linux_3.22.1-stable.tar.xz
+          wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_stable.tar.xz
+          tar xf flutter_linux_stable.tar.xz
           echo "::add-path::$(pwd)/flutter/bin"
           export PATH="$PATH:$(pwd)/flutter/bin"
           flutter --version
