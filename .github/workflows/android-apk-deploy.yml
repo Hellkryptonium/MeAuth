@@ -12,13 +12,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download latest stable Flutter SDK
+      # Restore Dart SDK requirement to the original version
+      - name: Update Dart SDK requirements to original value
         run: |
-          wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_stable.tar.xz
-          tar xf flutter_linux_stable.tar.xz
-          echo "::add-path::$(pwd)/flutter/bin"
-          export PATH="$PATH:$(pwd)/flutter/bin"
+          sed -i 's|sdk: '"'"'>=3.4.0 <4.0.0'"'"'|sdk: ^3.8.0|g' pubspec.yaml
+          cat pubspec.yaml
+
+      # Use the newer subosito/flutter-action@v2.12.0 release with Flutter 3.22.0 support
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2.12.0
+        with:
+          flutter-version: '3.22.0'
+          channel: 'stable'
+          cache: true
+      
+      - name: Check Flutter version
+        run: |
           flutter --version
+          dart --version
 
       - name: Install dependencies
         run: flutter pub get
