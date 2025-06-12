@@ -39,6 +39,11 @@ android {
     }
 }
 
+dependencies {
+    // Add the splash screen library for newer Android versions
+    implementation("androidx.core:core-splashscreen:1.0.0")
+}
+
 flutter {
     source = "../.."
 }

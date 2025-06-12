@@ -6,13 +6,15 @@ import 'package:local_auth/local_auth.dart';
 import 'dart:async';
 import '../models/auth_account.dart';
 import 'dart:math' as math;
+import 'settings_page.dart';
 
 class TotpListPage extends StatefulWidget {
   final List<AuthAccount> accounts;
   final VoidCallback onAddAccount;
   final VoidCallback onScanQr;
   final void Function(AuthAccount) onDelete;
-  const TotpListPage({super.key, required this.accounts, required this.onAddAccount, required this.onScanQr, required this.onDelete});
+  final ValueNotifier<ThemeMode> themeModeNotifier;
+  const TotpListPage({super.key, required this.accounts, required this.onAddAccount, required this.onScanQr, required this.onDelete, required this.themeModeNotifier});
 
   @override
   State<TotpListPage> createState() => _TotpListPageState();
@@ -22,6 +24,7 @@ class _TotpListPageState extends State<TotpListPage> {
   late Timer _timer;
   int _now = DateTime.now().millisecondsSinceEpoch;
   AuthAccount? _longPressedAccount;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -198,15 +201,42 @@ class _TotpListPageState extends State<TotpListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: Drawer(
+        child: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+            children: [
+              ListTile(
+                leading: const Icon(Icons.settings, color: Colors.blueGrey),
+                title: const Text('Settings', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SettingsPage(themeModeNotifier: widget.themeModeNotifier),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         scrolledUnderElevation: 0,
-        title: const Text('MeAuth', 
-          style: TextStyle(
-            fontWeight: FontWeight.bold, 
-            fontSize: 22,
-            letterSpacing: -0.5,
-          )
+        title: GestureDetector(
+          onTap: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+          child: const Text('MeAuth',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              letterSpacing: -0.5,
+            ),
+          ),
         ),
         actions: [
           IconButton(

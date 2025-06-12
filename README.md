@@ -80,9 +80,9 @@ MIT License
 
 ## Contact
 
-**Name:** Your Name  
-**Email:** your.email@example.com  
-**Project:** [github.com/yourusername/MeAuth](https://github.com/yourusername/MeAuth)
+**Name:** Mohd Harish  
+**Email:** harishjs1006@gmail.com  
+**Project:** [github.com/Hellkryptonium/MeAuth](https://github.com/Hellkryptonium/MeAuth)
 
 ---
 ## List of features
@@ -202,3 +202,30 @@ Summary:
 You can use this as a learning/demo authenticator, but not for real 2FA until secure storage and otpauth:// parsing are implemented.
 
 Would you like to proceed with secure storage and otpauth:// parsing so you can use it as a real authenticator? I can implement those next!
+
+1. Dark Mode Support
+Automatically switch between light and dark themes based on system settings.
+Allow manual theme selection in app settings.
+2. Account Backup & Restore
+Export accounts to an encrypted file.
+Import accounts from a backup file.
+(Optional) Integrate with Google Drive/iCloud for cloud backup.
+3. Account Search & Organization
+Add a search bar to quickly find accounts.
+Allow users to reorder accounts (drag-and-drop).
+Support folders or tags for grouping accounts.
+4. Custom Account Icons
+Show service logos (Google, Microsoft, GitHub, etc.) automatically.
+Allow users to pick a custom icon or color for each account.
+5. Security Enhancements
+Add PIN code as an alternative to biometrics.
+Allow users to set auto-lock timeout duration.
+6. User Experience Improvements
+Show a countdown/progress bar for TOTP code expiry.
+Add a home screen widget (Android/iOS) for quick code access.
+Show a notification with the current code for selected accounts.
+Recommended next step:
+Implement dark mode support and account backup/restore.
+These are highly requested by users and add real value and security.
+
+Would you like to start with dark mode, backup/restore, or another feature from the list?

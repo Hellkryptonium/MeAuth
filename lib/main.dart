@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -9,62 +10,81 @@ import 'pages/add_account_page.dart';
 import 'services/account_storage_service.dart';
 import 'services/otpauth_parser.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  // Ensure Flutter is initialized before doing anything
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  runApp(MeAuthRoot());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});  @override
+class MeAuthRoot extends StatefulWidget {
+  @override
+  State<MeAuthRoot> createState() => _MeAuthRootState();
+}
+
+class _MeAuthRootState extends State<MeAuthRoot> {
+  final ValueNotifier<ThemeMode> themeModeNotifier = ValueNotifier(ThemeMode.system);
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MeAuth',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1A73E8),  // Google blue
-          brightness: Brightness.light,
-        ),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.grey.shade50,
-          foregroundColor: Colors.black,
-          elevation: 0,
-          centerTitle: false,        ),        scaffoldBackgroundColor: Colors.grey.shade50,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
-            minimumSize: const Size(120, 45),
-            backgroundColor: const Color(0xFF1A73E8),
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeModeNotifier,
+      builder: (context, mode, _) {
+        return MaterialApp(
+          title: 'MeAuth',
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF1A73E8),
+              brightness: Brightness.light,
+            ),
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.grey.shade50,
+              foregroundColor: Colors.black,
+              elevation: 0,
+              centerTitle: false,
+            ),
+            scaffoldBackgroundColor: Colors.grey.shade50,
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                minimumSize: const Size(120, 45),
+                backgroundColor: const Color(0xFF1A73E8),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF8AB4F8),  // Lighter blue for dark theme
-          brightness: Brightness.dark,        ),
-        scaffoldBackgroundColor: const Color(0xFF121212),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
-            minimumSize: const Size(120, 45),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
+          darkTheme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF8AB4F8),
+              brightness: Brightness.dark,
+            ),
+            scaffoldBackgroundColor: const Color(0xFF121212),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                minimumSize: const Size(120, 45),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-      themeMode: ThemeMode.system,
-      home: const AuthGate(),
+          themeMode: mode,
+          home: AuthGate(themeModeNotifier: themeModeNotifier),
+        );
+      },
     );
   }
 }
 
 class AuthGate extends StatefulWidget {
-  const AuthGate({super.key});
+  final ValueNotifier<ThemeMode> themeModeNotifier;
+  const AuthGate({super.key, required this.themeModeNotifier});
 
   @override
   State<AuthGate> createState() => _AuthGateState();
@@ -125,7 +145,7 @@ class _AuthGateState extends State<AuthGate> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     if (_authenticated) {
-      return const MyHomePage(title: 'MeAuth');
+      return MyHomePage(title: 'MeAuth', themeModeNotifier: widget.themeModeNotifier);
     }    return Scaffold(
       body: SafeArea(
         child: Center(
@@ -216,7 +236,8 @@ class _AuthGateState extends State<AuthGate> with WidgetsBindingObserver {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  final ValueNotifier<ThemeMode> themeModeNotifier;
+  const MyHomePage({super.key, required this.title, required this.themeModeNotifier});
 
   final String title;
 
@@ -304,6 +325,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onAddAccount: () => _manualAdd(context),
         onScanQr: () => _scanQrAndAdd(context),
         onDelete: _deleteAccount,
+        themeModeNotifier: widget.themeModeNotifier,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _manualAdd(context),
