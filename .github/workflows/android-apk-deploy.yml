@@ -6,32 +6,21 @@ on:
       - main  # Change if your default branch is different
 
 jobs:
-  build-and-release:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Restore Dart SDK requirement to the original version
-      - name: Update Dart SDK requirements to original value
-        run: |
-          sed -i 's|sdk: '"'"'>=3.4.0 <4.0.0'"'"'|sdk: ^3.8.0|g' pubspec.yaml
-          cat pubspec.yaml
-
-      # Use the newer subosito/flutter-action@v2.12.0 release with Flutter 3.22.0 support
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2.12.0
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
-          channel: 'stable'
-          cache: true
-      
-      - name: Check Flutter version
-        run: |
-          flutter --version
-          dart --version
+          channel: stable
+          flutter-version: '3.32.2'
 
-      - name: Install dependencies
+      - run: flutter --version
+      # Expect Dart 3.8.1+
+
+      - name: Dependencies
         run: flutter pub get
 
       - name: Build APK
@@ -40,7 +29,8 @@ jobs:
       - name: Upload APK to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: release-${{ github.run_number }}
           files: build/app/outputs/flutter-apk/app-release.apk
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
