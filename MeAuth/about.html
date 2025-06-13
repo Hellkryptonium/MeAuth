@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - MeAuth</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero fade-in" style="padding-bottom:24px;">
+    <a href="index.html" style="float:left;font-size:1.2rem;color:#fff;text-decoration:none;">← Home</a>
+    <h1>About MeAuth</h1>
+    <p class="subtitle">A modern, open-source authenticator app for Android.</p>
+  </header>
+  <main>
+    <section class="features">
+      <div class="feature-card fade-up">
+        <h2>🔒 Security First</h2>
+        <p>All your accounts are stored securely with encryption and biometric protection.</p>
+      </div>
+      <div class="feature-card fade-up" style="animation-delay:0.1s;">
+        <h2>🌗 Theme Switch</h2>
+        <p>Enjoy both light and dark modes, switchable with a single tap.</p>
+      </div>
+      <div class="feature-card fade-up" style="animation-delay:0.2s;">
+        <h2>🧹 Clean UI</h2>
+        <p>Minimal, beautiful, and easy to use for everyone.</p>
+      </div>
+      <div class="feature-card fade-up" style="animation-delay:0.3s;">
+        <h2>📦 100% Open Source</h2>
+        <p>Transparent, community-driven, and free forever.</p>
+      </div>
+    </section>
+    <section class="links fade-in">
+      <a href="index.html">Home</a> |
+      <a href="https://github.com/Hellkryptonium/MeAuth">GitHub</a>
+    </section>
+  </main>
+  <footer>
+    <p>© 2025 MeAuth. All rights reserved.</p>
+  </footer>
+  <script>
+    // Dark mode persistence for about page
+    if (localStorage.getItem('meauth-dark') === 'true') {
+      document.body.classList.add('dark');
+    }
+    // Animate on load
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.fade-in').forEach((el, i) => {
+        el.style.opacity = 1;
+        el.style.transform = 'translateY(0)';
+      });
+      document.querySelectorAll('.fade-up').forEach((el, i) => {
+        setTimeout(() => {
+          el.style.opacity = 1;
+          el.style.transform = 'translateY(0)';
+        }, 200 + i * 120);
+      });
+    });
+  </script>
+</body>
+</html>
