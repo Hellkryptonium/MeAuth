@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Features - MeAuth</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="images/app-icon.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="images/app-icon.png" alt="MeAuth Icon" width="36" height="36" class="me-2 app-icon-animated">
+        <span class="fw-bold">MeAuth</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="features.html">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="screenshots.html">Screenshots</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://github.com/Hellkryptonium/MeAuth">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <main class="container py-5">
+    <h1 class="mb-4 text-center fw-bold fade-in">Features</h1>
+    <div class="row g-4">
+      <!-- Feature Card: Biometric Security -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card feature-card h-100 shadow fade-up position-relative">
+          <div class="card-body text-center">
+            <div class="display-4 mb-3 animated-icon" style="transition:transform 0.3s;">🔒</div>
+            <h5 class="card-title">Biometric Security <span class="badge bg-success">New</span></h5>
+            <p class="card-text">Unlock your vault and accounts with fingerprint or face unlock. All data is encrypted with Argon2 and AES.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Feature Card: Password Vault -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card feature-card h-100 shadow fade-up position-relative" style="animation-delay:0.1s;">
+          <div class="card-body text-center">
+            <div class="display-4 mb-3 animated-icon">🔑</div>
+            <h5 class="card-title">Password Vault <span class="badge bg-primary">Popular</span></h5>
+            <p class="card-text">Store, reveal, copy, and manage passwords securely. Clipboard auto-clear and edit/delete included.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Feature Card: Search & Filter -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card feature-card h-100 shadow fade-up position-relative" style="animation-delay:0.2s;">
+          <div class="card-body text-center">
+            <div class="display-4 mb-3 animated-icon">🔍</div>
+            <h5 class="card-title">Search & Filter</h5>
+            <p class="card-text">Quickly find accounts or passwords with real-time search and filtering.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Feature Card: Modern UI -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card feature-card h-100 shadow fade-up position-relative" style="animation-delay:0.3s;">
+          <div class="card-body text-center">
+            <div class="display-4 mb-3 animated-icon">📱</div>
+            <h5 class="card-title">Modern UI</h5>
+            <p class="card-text">Beautiful, animated, and responsive design for a cozy experience on any device.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Feature Card: Open Source -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card feature-card h-100 shadow fade-up position-relative" style="animation-delay:0.4s;">
+          <div class="card-body text-center">
+            <div class="display-4 mb-3 animated-icon">🛡️</div>
+            <h5 class="card-title">Open Source</h5>
+            <p class="card-text">100% open source, privacy-first, and community-driven. No ads, no tracking, ever.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Feature Card: Fast & Lightweight -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card feature-card h-100 shadow fade-up position-relative" style="animation-delay:0.5s;">
+          <div class="card-body text-center">
+            <div class="display-4 mb-3 animated-icon">⚡</div>
+            <h5 class="card-title">Fast & Lightweight</h5>
+            <p class="card-text">Instant unlock, smooth navigation, and minimal battery usage.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Feature Demo Modals (replace images as needed) -->
+    <div class="modal fade" id="biometricsModal" tabindex="-1" aria-labelledby="biometricsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="biometricsModalLabel">Biometric Security Demo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <!-- 3D SVG/Component Placeholder: Replace with your own or a Lottie animation -->
+            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="60" cy="100" rx="40" ry="12" fill="#e3f0ff"/>
+              <rect x="30" y="30" width="60" height="60" rx="16" fill="#1A73E8"/>
+              <rect x="40" y="40" width="40" height="40" rx="10" fill="#fff"/>
+              <circle cx="60" cy="60" r="10" fill="#1A73E8"/>
+              <path d="M60 70c8 0 14-6 14-14" stroke="#1A73E8" stroke-width="2" fill="none"/>
+            </svg>
+            <p class="mt-3">Biometric unlock is fast, secure, and privacy-first. <br><em>(Replace this SVG with your own 3D/animated component if desired.)</em></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="vaultModal" tabindex="-1" aria-labelledby="vaultModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="vaultModalLabel">Password Vault Demo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <!-- PLACEHOLDER: Replace with your own GIF or screenshot -->
+            <img src="images/screenshots1.png" alt="Password Vault Demo" class="img-fluid rounded shadow">
+            <p class="mt-3">Manage, reveal, and copy passwords securely.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="searchModalLabel">Search & Filter Demo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <!-- PLACEHOLDER: Replace with your own GIF or screenshot -->
+            <img src="images/screenshots2.png" alt="Search Demo" class="img-fluid rounded shadow">
+            <p class="mt-3">Find accounts instantly with real-time search.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="uiModal" tabindex="-1" aria-labelledby="uiModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="uiModalLabel">Modern UI Demo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <!-- PLACEHOLDER: Replace with your own GIF or screenshot -->
+            <img src="images/screenshots3.png" alt="UI Demo" class="img-fluid rounded shadow">
+            <p class="mt-3">A cozy, animated, and beautiful interface.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="opensourceModal" tabindex="-1" aria-labelledby="opensourceModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="opensourceModalLabel">Open Source Demo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <!-- PLACEHOLDER: Replace with your own GIF or screenshot -->
+            <img src="images/open-source.png" alt="Open Source Demo" class="img-fluid rounded shadow">
+            <p class="mt-3">100% open source and privacy-first.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="fastModal" tabindex="-1" aria-labelledby="fastModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="fastModalLabel">Fast & Lightweight Demo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <!-- PLACEHOLDER: Replace with your own GIF or screenshot -->
+            <img src="images/screenshots5.png" alt="Fast Demo" class="img-fluid rounded shadow">
+            <p class="mt-3">Instant unlock and smooth navigation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Feature Comparison Table -->
+    <section class="mt-5">
+      <h2 class="text-center mb-4">Feature Comparison</h2>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle bg-white shadow-sm">
+          <thead class="table-light">
+            <tr>
+              <th>Feature</th>
+              <th>MeAuth</th>
+              <th>Google Authenticator</th>
+              <th>Authy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Biometric Unlock</td><td>✔️</td><td>❌</td><td>✔️</td></tr>
+            <tr><td>Password Vault</td><td>✔️</td><td>❌</td><td>❌</td></tr>
+            <tr><td>Open Source</td><td>✔️</td><td>❌</td><td>❌</td></tr>
+            <tr><td>Clipboard Auto-Clear</td><td>✔️</td><td>❌</td><td>❌</td></tr>
+            <tr><td>Modern UI</td><td>✔️</td><td>❌</td><td>✔️</td></tr>
+            <tr><td>Offline Only</td><td>✔️</td><td>✔️</td><td>❌</td></tr>
+            <tr><td>Free/No Ads</td><td>✔️</td><td>✔️</td><td>❌</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <!-- FAQ Accordion -->
+    <section class="mt-5">
+      <h2 class="text-center mb-4">Frequently Asked Questions</h2>
+      <div class="accordion" id="faqAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faq1">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+              Is my data stored securely?
+            </button>
+          </h2>
+          <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Yes! All data is encrypted with Argon2 and AES, and protected by biometrics if enabled.
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faq2">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+              Is MeAuth open source?
+            </button>
+          </h2>
+          <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Yes! You can view and contribute to the code on <a href="https://github.com/Hellkryptonium/MeAuth">GitHub</a>.
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faq3">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+              Can I import/export my data?
+            </button>
+          </h2>
+          <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Yes, you can securely export and import your encrypted vault (feature in progress).
+            </div>
+          </div>
+        </div>
+        <!-- Add more FAQ items as needed -->
+      </div>
+    </section>
+    <!-- Feature Explorer Tabs (Interactive Section) -->
+    <section class="mt-5">
+      <h2 class="text-center mb-4">Feature Explorer</h2>
+      <ul class="nav nav-pills justify-content-center mb-3" id="featureTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="tab-bio" data-bs-toggle="pill" data-bs-target="#bio" type="button" role="tab" aria-controls="bio" aria-selected="true">🔒 Biometric</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-vault" data-bs-toggle="pill" data-bs-target="#vault" type="button" role="tab" aria-controls="vault" aria-selected="false">🔑 Vault</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-search" data-bs-toggle="pill" data-bs-target="#search" type="button" role="tab" aria-controls="search" aria-selected="false">🔍 Search</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-ui" data-bs-toggle="pill" data-bs-target="#ui" type="button" role="tab" aria-controls="ui" aria-selected="false">📱 UI</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-open" data-bs-toggle="pill" data-bs-target="#open" type="button" role="tab" aria-controls="open" aria-selected="false">🛡️ Open Source</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-fast" data-bs-toggle="pill" data-bs-target="#fast" type="button" role="tab" aria-controls="fast" aria-selected="false">⚡ Fast</button>
+        </li>
+      </ul>
+      <div class="tab-content bg-white p-4 rounded shadow-sm" id="featureTabContent">
+        <div class="tab-pane fade show active text-center" id="bio" role="tabpanel" aria-labelledby="tab-bio">
+          <img src="images/app-icon.png" alt="Biometric" width="80" class="mb-3 animated-icon">
+          <h5>Biometric Security</h5>
+          <p>Unlock your vault and accounts with fingerprint or face unlock. <br>All data is encrypted with Argon2 and AES.</p>
+        </div>
+        <div class="tab-pane fade text-center" id="vault" role="tabpanel" aria-labelledby="tab-vault">
+          <img src="images/screenshots1.png" alt="Vault" width="120" class="mb-3 rounded shadow">
+          <h5>Password Vault</h5>
+          <p>Store, reveal, copy, and manage passwords securely. <br>Clipboard auto-clear and edit/delete included.</p>
+        </div>
+        <div class="tab-pane fade text-center" id="search" role="tabpanel" aria-labelledby="tab-search">
+          <img src="images/screenshots2.png" alt="Search" width="120" class="mb-3 rounded shadow">
+          <h5>Search & Filter</h5>
+          <p>Quickly find accounts or passwords with real-time search and filtering.</p>
+        </div>
+        <div class="tab-pane fade text-center" id="ui" role="tabpanel" aria-labelledby="tab-ui">
+          <img src="images/screenshots3.png" alt="UI" width="120" class="mb-3 rounded shadow">
+          <h5>Modern UI</h5>
+          <p>Beautiful, animated, and responsive design for a cozy experience on any device.</p>
+        </div>
+        <div class="tab-pane fade text-center" id="open" role="tabpanel" aria-labelledby="tab-open">
+          <img src="images/open-source.png" alt="Open Source" width="120" class="mb-3 rounded shadow">
+          <h5>Open Source</h5>
+          <p>100% open source, privacy-first, and community-driven. <br>No ads, no tracking, ever.</p>
+        </div>
+        <div class="tab-pane fade text-center" id="fast" role="tabpanel" aria-labelledby="tab-fast">
+          <img src="images/screenshots5.png" alt="Fast" width="120" class="mb-3 rounded shadow">
+          <h5>Fast & Lightweight</h5>
+          <p>Instant unlock, smooth navigation, and minimal battery usage.</p>
+        </div>
+      </div>
+    </section>
+    <div class="text-center mt-5">
+      <a href="index.html" class="btn btn-outline-primary btn-lg">← Back to Home</a>
+    </div>
+  </main>
+  <footer class="footer mt-5 py-3 bg-light text-center">
+    <div class="container">
+      <span class="text-muted">© 2025 MeAuth. All rights reserved. | <a href="mailto:harishjs1006@gmail.com">Contact</a></span>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="framer-mock.js"></script>
+  <script>
+    // Animated icon hover
+    document.querySelectorAll('.animated-icon').forEach(icon => {
+      icon.addEventListener('mouseenter', () => icon.style.transform = 'scale(1.2) rotate(-8deg)');
+      icon.addEventListener('mouseleave', () => icon.style.transform = '');
+    });
+  </script>
+<!--
+  PLACEHOLDER IMAGES/CONTENT TO UPDATE:
+  - All images: use images/app-icon.png, images/dev-avatar.png, images/screenshots1.png ... images/screenshots5.png
+  - Modals: Replace SVG or screenshot in each modal with your own GIF, SVG, or screenshot as desired.
+  - Testimonials: Replace dev-avatar.png and user names/quotes with real users if available.
+  - FAQ: Add more questions/answers as needed.
+  - Feature tags/badges: Adjust as features evolve.
+-->

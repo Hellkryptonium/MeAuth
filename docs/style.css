@@ -289,6 +289,31 @@ body.dark footer {
   color: #888;
 }
 
+.app-icon-animated {
+  animation: float 3.5s ease-in-out infinite, glow 2.5s alternate infinite;
+  box-shadow: 0 4px 24px rgba(26,115,232,0.12), 0 0 0 0 #1A73E8;
+}
+@keyframes glow {
+  0% { box-shadow: 0 4px 24px rgba(26,115,232,0.12), 0 0 0 0 #1A73E8; }
+  100% { box-shadow: 0 4px 24px rgba(26,115,232,0.18), 0 0 24px 8px #67c6ff44; }
+}
+.animated-icon {
+  transition: transform 0.3s;
+  display: inline-block;
+}
+.animated-icon:hover {
+  transform: scale(1.2) rotate(-8deg);
+}
+#backToTop {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
 @media (max-width: 700px) {
   .features {
     flex-direction: column;
