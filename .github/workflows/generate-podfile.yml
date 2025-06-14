@@ -17,10 +17,14 @@ jobs:
       - name: Resolve dependencies (locked)
         run: flutter pub get
 
-      - name: Generate Podfile
+      - name: Generate Podfile (if missing)
         run: |
           cd ios
-          pod init
+          if [ ! -f Podfile ]; then
+            pod init
+          else
+            echo "Podfile already exists, skipping pod init."
+          fi
 
       - name: Commit Podfile
         run: |
