@@ -14,9 +14,6 @@ jobs:
         with:
           channel: master
 
-      - name: Resolve dependencies (locked)
-        run: flutter pub get
-
       - name: Generate Podfile (if missing)
         run: |
           cd ios
@@ -25,6 +22,9 @@ jobs:
           else
             echo "Podfile already exists, skipping pod init."
           fi
+
+      - name: Resolve dependencies (iOS)
+        run: flutter pub get
 
       - name: Commit Podfile
         run: |
