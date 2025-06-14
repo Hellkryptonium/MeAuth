@@ -14,6 +14,11 @@ jobs:
         with:
           channel: master
 
+      - name: Resolve dependencies
+        run: |
+          flutter pub get
+          flutter pub upgrade --major-versions
+
       - name: Generate Podfile
         run: |
           cd ios
