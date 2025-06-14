@@ -1,9 +1,7 @@
 name: Build and Release Android APK
 
 on:
-  push:
-    branches:
-      - main  # Change if your default branch is different
+  workflow_dispatch:
 
 # Add permissions needed for creating releases
 permissions:
