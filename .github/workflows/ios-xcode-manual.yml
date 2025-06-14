@@ -1,0 +1,40 @@
+name: Build iOS App (Manual)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.x'
+
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+          cd ios
+          pod install
+
+      - name: Build iOS app (unsigned)
+        run: flutter build ios --no-codesign
+
+      - name: Zip Xcode Project
+        run: |
+          cd ios
+          zip -r ../ios-artifact.zip .
+
+      - name: Upload iOS Artifact to Existing Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: release-12
+          name: "iOS Build for release-12"
+          files: ios-artifact.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
