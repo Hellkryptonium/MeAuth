@@ -7,14 +7,17 @@ import 'dart:async';
 import '../models/auth_account.dart';
 import 'dart:math' as math;
 import 'settings_page.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'password_vault_page.dart'; // Import PasswordVaultPage
 
 class TotpListPage extends StatefulWidget {
   final List<AuthAccount> accounts;
   final VoidCallback onAddAccount;
   final VoidCallback onScanQr;
   final void Function(AuthAccount) onDelete;
+  final void Function(AuthAccount, String, String)? onEdit; // Add onEdit callback
   final ValueNotifier<ThemeMode> themeModeNotifier;
-  const TotpListPage({super.key, required this.accounts, required this.onAddAccount, required this.onScanQr, required this.onDelete, required this.themeModeNotifier});
+  const TotpListPage({super.key, required this.accounts, required this.onAddAccount, required this.onScanQr, required this.onDelete, this.onEdit, required this.themeModeNotifier});
 
   @override
   State<TotpListPage> createState() => _TotpListPageState();
@@ -25,6 +28,7 @@ class _TotpListPageState extends State<TotpListPage> {
   int _now = DateTime.now().millisecondsSinceEpoch;
   AuthAccount? _longPressedAccount;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -196,10 +200,316 @@ class _TotpListPageState extends State<TotpListPage> {
         margin: const EdgeInsets.all(8),
       ),
     );
+    // Auto-clear clipboard after 30 seconds
+    Future.delayed(const Duration(seconds: 30), () async {
+      final data = await Clipboard.getData('text/plain');
+      if (data != null && data.text == code) {
+        Clipboard.setData(const ClipboardData(text: ''));
+      }
+    });
   }
   
+  void _showAccountOptions(BuildContext context, AuthAccount acc) async {
+    HapticFeedback.mediumImpact();
+    final result = await showModalBottomSheet<String>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 10, bottom: 15),
+                height: 4,
+                width: 40,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text('Edit'),
+                onTap: () => Navigator.pop(context, 'edit'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete, color: Colors.red),
+                title: const Text('Delete', style: TextStyle(color: Colors.red)),
+                onTap: () => Navigator.pop(context, 'delete'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    if (result == 'edit') {
+      _showEditAccountDialog(context, acc);
+    } else if (result == 'delete') {
+      _confirmDelete(context, acc);
+    }
+  }
+
+  void _showEditAccountDialog(BuildContext context, AuthAccount acc) async {
+    final labelController = TextEditingController(text: acc.label);
+    String selectedIcon = acc.icon;
+    final List<String> materialIcons = [
+      'key', 'security', 'lock', 'account_circle', 'vpn_key', 'shield', 'star', 'person', 'email', 'phone', 'cloud', 'home', 'work', 'wallet', 'credit_card', 'devices', 'wifi', 'apartment', 'business', 'school', 'shopping_cart', 'flight', 'directions_car', 'favorite', 'pets', 'cake', 'sports_soccer', 'fitness_center', 'music_note', 'movie', 'book', 'camera', 'gamepad', 'code', 'build', 'bug_report', 'emoji_objects', 'lightbulb', 'rocket', 'science', 'medication', 'local_hospital', 'restaurant', 'local_cafe', 'local_bar', 'beach_access', 'park', 'local_florist', 'spa', 'palette', 'brush', 'mic', 'headphones', 'directions_bike', 'directions_run', 'directions_boat', 'directions_bus', 'directions_railway', 'directions_subway', 'directions_transit', 'directions_walk', 'eco', 'electric_bolt', 'emoji_nature', 'emoji_people', 'emoji_transportation', 'engineering', 'face', 'favorite', 'fingerprint', 'gavel', 'group', 'groups', 'hiking', 'hotel', 'icecream', 'language', 'laptop', 'map', 'nightlife', 'outdoor_grill', 'pets', 'public', 'recycle', 'rowing', 'sailing', 'school', 'science', 'skateboarding', 'smartphone', 'sports', 'sports_basketball', 'sports_cricket', 'sports_esports', 'sports_football', 'sports_golf', 'sports_handball', 'sports_hockey', 'sports_kabaddi', 'sports_mma', 'sports_motorsports', 'sports_rugby', 'sports_tennis', 'sports_volleyball', 'surfing', 'theater_comedy', 'toys', 'travel_explore', 'watch', 'work',
+    ];
+    final List<String> emojis = [
+      '🔑', '🛡️', '🔒', '👤', '📧', '📱', '☁️', '🏠', '💼', '💳', '💻', '📶', '🏢', '🏫', '🛒', '✈️', '🚗', '⭐', '🐾', '🎂', '⚽', '🏋️', '🎵', '🎬', '📚', '📷', '🎮', '💡', '🚀', '🧪', '💊', '🏥', '🍽️', '☕', '🍸', '🏖️', '🌳', '🌸', '🧘', '🎨', '🖌️', '🎤', '🎧', '🚴', '🏃', '⛵', '🚌', '🚆', '🚇', '🚍', '🚶', '🌱', '⚡', '🌲', '🧑‍🤝‍🧑', '🚗', '🏄', '🏨', '🍦', '🌐', '🗺️', '🌃', '🔥', '🐶', '🌍', '♻️', '🛶', '🏫', '🧑‍🔬', '🛹', '📱', '🏀', '🏏', '🎮', '🏈', '🏌️', '🤾', '🏒', '🤼', '🥊', '🏎️', '🏉', '🎾', '🏐', '🏄‍♂️', '🎭', '🧸', '🌎', '⌚', '💼',
+    ];
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Edit Account'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Label'),
+                TextField(
+                  controller: labelController,
+                  decoration: const InputDecoration(hintText: 'Account label'),
+                ),
+                const SizedBox(height: 16),
+                const Text('Pick an icon'),
+                SizedBox(
+                  height: 80,
+                  child: GridView.count(
+                    crossAxisCount: 8,
+                    crossAxisSpacing: 4,
+                    mainAxisSpacing: 4,
+                    children: [
+                      ...materialIcons.take(16).map((iconName) => GestureDetector(
+                        onTap: () => selectedIcon = iconName,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: selectedIcon == iconName ? Border.all(color: Theme.of(context).colorScheme.primary, width: 2) : null,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Icon(_iconDataFromName(iconName), color: Colors.black),
+                        ),
+                      )),
+                      ...emojis.take(16).map((emoji) => GestureDetector(
+                        onTap: () => selectedIcon = emoji,
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            border: selectedIcon == emoji ? Border.all(color: Theme.of(context).colorScheme.primary, width: 2) : null,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(emoji, style: const TextStyle(fontSize: 20)),
+                        ),
+                      )),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    // Show full icon picker in a dialog
+                    await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('All Icons'),
+                          content: SizedBox(
+                            width: 400,
+                            height: 300,
+                            child: GridView.count(
+                              crossAxisCount: 8,
+                              crossAxisSpacing: 4,
+                              mainAxisSpacing: 4,
+                              children: [
+                                ...materialIcons.map((iconName) => GestureDetector(
+                                  onTap: () {
+                                    selectedIcon = iconName;
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: selectedIcon == iconName ? Border.all(color: Theme.of(context).colorScheme.primary, width: 2) : null,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Icon(_iconDataFromName(iconName), color: Colors.black),
+                                  ),
+                                )),
+                                ...emojis.map((emoji) => GestureDetector(
+                                  onTap: () {
+                                    selectedIcon = emoji;
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      border: selectedIcon == emoji ? Border.all(color: Theme.of(context).colorScheme.primary, width: 2) : null,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(emoji, style: const TextStyle(fontSize: 20)),
+                                  ),
+                                )),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                    setState(() {});
+                  },
+                  child: const Text('Show all icons'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (widget.onEdit != null) {
+                  widget.onEdit!(acc, labelController.text, selectedIcon);
+                }
+                Navigator.pop(context);
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+    setState(() {});
+  }
+
+  IconData? _iconDataFromName(String name) {
+    final iconMap = <String, IconData>{
+      'key': Icons.key,
+      'security': Icons.security,
+      'lock': Icons.lock,
+      'account_circle': Icons.account_circle,
+      'vpn_key': Icons.vpn_key,
+      'shield': Icons.shield,
+      'star': Icons.star,
+      'person': Icons.person,
+      'email': Icons.email,
+      'phone': Icons.phone,
+      'cloud': Icons.cloud,
+      'home': Icons.home,
+      'work': Icons.work,
+      'wallet': Icons.wallet,
+      'credit_card': Icons.credit_card,
+      'devices': Icons.devices,
+      'wifi': Icons.wifi,
+      'apartment': Icons.apartment,
+      'business': Icons.business,
+      'school': Icons.school,
+      'shopping_cart': Icons.shopping_cart,
+      'flight': Icons.flight,
+      'directions_car': Icons.directions_car,
+      'favorite': Icons.favorite,
+      'pets': Icons.pets,
+      'cake': Icons.cake,
+      'sports_soccer': Icons.sports_soccer,
+      'fitness_center': Icons.fitness_center,
+      'music_note': Icons.music_note,
+      'movie': Icons.movie,
+      'book': Icons.book,
+      'camera': Icons.camera,
+      'gamepad': Icons.gamepad,
+      'code': Icons.code,
+      'build': Icons.build,
+      'bug_report': Icons.bug_report,
+      'emoji_objects': Icons.emoji_objects,
+      'lightbulb': Icons.lightbulb,
+      'rocket': Icons.rocket,
+      'science': Icons.science,
+      'medication': Icons.medication,
+      'local_hospital': Icons.local_hospital,
+      'restaurant': Icons.restaurant,
+      'local_cafe': Icons.local_cafe,
+      'local_bar': Icons.local_bar,
+      'beach_access': Icons.beach_access,
+      'park': Icons.park,
+      'local_florist': Icons.local_florist,
+      'spa': Icons.spa,
+      'palette': Icons.palette,
+      'brush': Icons.brush,
+      'mic': Icons.mic,
+      'headphones': Icons.headphones,
+      'directions_bike': Icons.directions_bike,
+      'directions_run': Icons.directions_run,
+      'directions_boat': Icons.directions_boat,
+      'directions_bus': Icons.directions_bus,
+      'directions_railway': Icons.directions_railway,
+      'directions_subway': Icons.directions_subway,
+      'directions_transit': Icons.directions_transit,
+      'directions_walk': Icons.directions_walk,
+      'eco': Icons.eco,
+      'electric_bolt': Icons.electric_bolt,
+      'emoji_nature': Icons.emoji_nature,
+      'emoji_people': Icons.emoji_people,
+      'emoji_transportation': Icons.emoji_transportation,
+      'engineering': Icons.engineering,
+      'face': Icons.face,
+      'favorite': Icons.favorite,
+      'fingerprint': Icons.fingerprint,
+      'gavel': Icons.gavel,
+      'group': Icons.group,
+      'groups': Icons.groups,
+      'hiking': Icons.hiking,
+      'hotel': Icons.hotel,
+      'icecream': Icons.icecream,
+      'language': Icons.language,
+      'laptop': Icons.laptop,
+      'map': Icons.map,
+      'nightlife': Icons.nightlife,
+      'outdoor_grill': Icons.outdoor_grill,
+      'pets': Icons.pets,
+      'public': Icons.public,
+      'recycle': Icons.recycling,
+      'rowing': Icons.rowing,
+      'sailing': Icons.sailing,
+      'school': Icons.school,
+      'science': Icons.science,
+      'skateboarding': Icons.skateboarding,
+      'smartphone': Icons.smartphone,
+      'sports': Icons.sports,
+      'sports_basketball': Icons.sports_basketball,
+      'sports_cricket': Icons.sports_cricket,
+      'sports_esports': Icons.sports_esports,
+      'sports_football': Icons.sports_football,
+      'sports_golf': Icons.sports_golf,
+      'sports_handball': Icons.sports_handball,
+      'sports_hockey': Icons.sports_hockey,
+      'sports_kabaddi': Icons.sports_kabaddi,
+      'sports_mma': Icons.sports_mma,
+      'sports_motorsports': Icons.sports_motorsports,
+      'sports_rugby': Icons.sports_rugby,
+      'sports_tennis': Icons.sports_tennis,
+      'sports_volleyball': Icons.sports_volleyball,
+      'surfing': Icons.surfing,
+      'theater_comedy': Icons.theater_comedy,
+      'toys': Icons.toys,
+      'travel_explore': Icons.travel_explore,
+      'watch': Icons.watch,
+      'work': Icons.work,
+    };
+    return iconMap[name];
+  }
+
   @override
   Widget build(BuildContext context) {
+    final filteredAccounts = _searchQuery.isEmpty
+        ? widget.accounts
+        : widget.accounts.where((acc) =>
+            (acc.issuer ?? acc.label).toLowerCase().contains(_searchQuery.toLowerCase()) ||
+            acc.label.toLowerCase().contains(_searchQuery.toLowerCase())
+          ).toList();
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
@@ -207,6 +517,18 @@ class _TotpListPageState extends State<TotpListPage> {
           child: ListView(
             padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
             children: [
+              ListTile(
+                leading: const Icon(Icons.vpn_key),
+                title: const Text('Password Vault'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PasswordVaultPage(),
+                    ),
+                  );
+                },
+              ),
               ListTile(
                 leading: const Icon(Icons.settings, color: Colors.blueGrey),
                 title: const Text('Settings', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -239,12 +561,22 @@ class _TotpListPageState extends State<TotpListPage> {
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.qr_code_scanner),
-            tooltip: 'Scan QR',
-            onPressed: widget.onScanQr,
-          ),
+          // Removed dark/light mode toggle icon
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(56),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: TextField(
+              decoration: const InputDecoration(
+                hintText: 'Search...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (val) => setState(() => _searchQuery = val),
+            ),
+          ),
+        ),
       ),
       body: widget.accounts.isEmpty
           ? Center(
@@ -287,25 +619,22 @@ class _TotpListPageState extends State<TotpListPage> {
               ),
             )
           : ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemCount: widget.accounts.length,
-              itemBuilder: (context, index) {
-                final acc = widget.accounts[index];
+              itemCount: filteredAccounts.length,
+              itemBuilder: (context, idx) {
+                final acc = filteredAccounts[idx];
                 final code = _generateCode(acc);
-                final progress = _progress(acc);
-                
                 // Split the code into groups of 3 for better readability
                 String formattedCode = '';
                 for (int i = 0; i < code.length; i++) {
                   formattedCode += code[i];
                   if (i == 2 && code.length > 3) formattedCode += ' ';
                 }
-
-                // Calculate animation values for progress
+                final progress = _progress(acc);
                 final animatedColor = ColorTween(
                   begin: Colors.red,
                   end: Colors.blue,
-                ).transform(progress < 0.2 ? 0 : (progress - 0.2) / 0.8) ?? Colors.blue;                  return Dismissible(
+                ).transform(progress < 0.2 ? 0 : (progress - 0.2) / 0.8) ?? Colors.blue;
+                return Dismissible(
                   key: Key(acc.secret),
                   direction: DismissDirection.endToStart,
                   confirmDismiss: (_) async {
@@ -335,7 +664,7 @@ class _TotpListPageState extends State<TotpListPage> {
                               const Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 48),
                               const SizedBox(height: 16),
                               Text(
-                                'Delete "${acc.issuer ?? acc.label}"?',
+                                'Delete "[39m${acc.issuer ?? acc.label}"?',
                                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 8),
@@ -371,7 +700,8 @@ class _TotpListPageState extends State<TotpListPage> {
                     if (result != true) return false;
                     // Biometric authentication
                     final LocalAuthentication auth = LocalAuthentication();
-                    try {                      bool didAuthenticate = await auth.authenticate(
+                    try {
+                      bool didAuthenticate = await auth.authenticate(
                         localizedReason: 'Please authenticate to delete this account',
                         options: const AuthenticationOptions(
                           biometricOnly: false,
@@ -439,119 +769,7 @@ class _TotpListPageState extends State<TotpListPage> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(12),
                       onTap: () => _copyToClipboard(context, code),
-                      onLongPress: () async {
-                        HapticFeedback.mediumImpact();
-                        _longPressedAccount = acc;
-                        // Show the same confirmation and authentication dialog as swipe
-                        final result = await showModalBottomSheet<bool>(
-                          context: context,
-                          backgroundColor: Colors.transparent,
-                          isScrollControlled: true,
-                          builder: (context) {
-                            return Container(
-                              height: 220,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 10, bottom: 15),
-                                    height: 4,
-                                    width: 40,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
-                                      borderRadius: BorderRadius.circular(2),
-                                    ),
-                                  ),
-                                  const Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 48),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    'Delete "${acc.issuer ?? acc.label}"?',
-                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  const Text('This action requires authentication and cannot be undone'),
-                                  const SizedBox(height: 24),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                          minimumSize: const Size(120, 45),
-                                          side: const BorderSide(color: Colors.grey),
-                                        ),
-                                        onPressed: () => Navigator.pop(context, false),
-                                        child: const Text('Cancel'),
-                                      ),
-                                      const SizedBox(width: 16),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red,
-                                          minimumSize: const Size(120, 45),
-                                        ),
-                                        onPressed: () => Navigator.pop(context, true),
-                                        child: const Text('Delete', style: TextStyle(color: Colors.white)),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                        if (result == true) {
-                          // Biometric authentication
-                          final LocalAuthentication auth = LocalAuthentication();
-                          try {                            // First get the account name before deletion
-                            final accountName = acc.issuer ?? acc.label;
-
-                            // Use a shorter timeout and stickyAuth to prevent app from locking
-                            bool didAuthenticate = await auth.authenticate(
-                              localizedReason: 'Please authenticate to delete this account',
-                              options: const AuthenticationOptions(
-                                biometricOnly: false,
-                                stickyAuth: true, // Keep authentication session open
-                                useErrorDialogs: true,
-                              ),
-                            );
-
-                            if (didAuthenticate && context.mounted) {
-                              // Call delete first - must happen before any UI updates
-                              widget.onDelete(acc);
-                              
-                              // Show success message after deletion
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Row(
-                                      children: [
-                                        const Icon(Icons.check_circle, color: Colors.white),
-                                        const SizedBox(width: 12),
-                                        Text('$accountName deleted'),
-                                      ],
-                                    ),
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                    margin: const EdgeInsets.all(8),
-                                  ),
-                                );
-                              }
-                            }else if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Authentication failed. Account not deleted.')),
-                              );
-                            }
-                          } catch (e) {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Authentication failed: \\${e.toString()}')),
-                              );
-                            }
-                          }
-                        }
-                      },
+                      onLongPress: () => _showAccountOptions(context, acc),
                       child: Stack(
                         children: [
                           Padding(
@@ -562,20 +780,29 @@ class _TotpListPageState extends State<TotpListPage> {
                                 // Header row with issuer and copy icon
                                 Row(
                                   children: [
-                                    // Issuer icon
-                                    Container(
-                                      width: 24,
-                                      height: 24,
-                                      decoration: BoxDecoration(
-                                        color: Color((acc.issuer?.hashCode ?? acc.label.hashCode) | 0xFF000000).withOpacity(0.2),
-                                        borderRadius: BorderRadius.circular(4),
+                                    // Icon or emoji
+                                    if (acc.icon.isNotEmpty && _iconDataFromName(acc.icon) != null)
+                                      Container(
+                                        width: 28,
+                                        height: 28,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: Icon(_iconDataFromName(acc.icon), color: Theme.of(context).colorScheme.primary, size: 20),
+                                      )
+                                    else if (acc.icon.isNotEmpty)
+                                      Container(
+                                        width: 28,
+                                        height: 28,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: Text(acc.icon, style: const TextStyle(fontSize: 18)),
                                       ),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        (acc.issuer?.isNotEmpty == true ? acc.issuer![0] : acc.label[0]).toUpperCase(),
-                                        style: const TextStyle(fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
                                     const SizedBox(width: 12),
                                     // Issuer name
                                     Expanded(
@@ -607,7 +834,8 @@ class _TotpListPageState extends State<TotpListPage> {
                                 // Code display with animation
                                 Center(
                                   child: Hero(
-                                    tag: 'code-${acc.secret}',                                    child: Text(
+                                    tag: 'code-${acc.secret}',
+                                    child: Text(
                                       formattedCode,
                                       style: TextStyle(
                                         fontSize: 32, 
@@ -639,7 +867,8 @@ class _TotpListPageState extends State<TotpListPage> {
                                   return LinearProgressIndicator(
                                     value: value,
                                     minHeight: 4,
-                                    backgroundColor: Colors.grey[100],                                    valueColor: AlwaysStoppedAnimation<Color>(animatedColor),
+                                    backgroundColor: Colors.grey[100],
+                                    valueColor: AlwaysStoppedAnimation<Color>(animatedColor),
                                   );
                                 },
                               ),
@@ -652,6 +881,27 @@ class _TotpListPageState extends State<TotpListPage> {
                 );
               },
             ),
+      floatingActionButton: SpeedDial(
+        key: const ValueKey('main-speed-dial'),
+        icon: Icons.add,
+        activeIcon: Icons.close,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        renderOverlay: true,
+        useRotationAnimation: false,
+        children: [
+          SpeedDialChild(
+            child: const Icon(Icons.qr_code_scanner),
+            label: 'Scan QR',
+            onTap: widget.onScanQr,
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.edit),
+            label: 'Manual Entry',
+            onTap: widget.onAddAccount,
+          ),
+        ],
+      ),
     );
   }
+  // ...existing code...
 }

@@ -11,6 +11,7 @@ class AuthAccount {
   final int period; // For TOTP
   final int? counter; // For HOTP
   final String algorithm; // Add algorithm
+  final String icon; // New: icon name or emoji
 
   AuthAccount({
     required this.label,
@@ -21,6 +22,7 @@ class AuthAccount {
     this.period = 30,
     this.counter,
     this.algorithm = 'SHA1',
+    this.icon = 'key', // Default icon
   });
 
   Map<String, dynamic> toJson() => {
@@ -32,6 +34,7 @@ class AuthAccount {
         'period': period,
         'counter': counter,
         'algorithm': algorithm,
+        'icon': icon,
       };
 
   factory AuthAccount.fromJson(Map<String, dynamic> json) => AuthAccount(
@@ -43,5 +46,6 @@ class AuthAccount {
         period: json['period'] ?? 30,
         counter: json['counter'],
         algorithm: json['algorithm'] ?? 'SHA1',
+        icon: json['icon'] ?? 'key',
       );
 }

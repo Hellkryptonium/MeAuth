@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'password_vault_page.dart';
 
 class SettingsPage extends StatelessWidget {
   final ValueNotifier<ThemeMode> themeModeNotifier;
@@ -12,6 +13,15 @@ class SettingsPage extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          ListTile(
+            leading: const Icon(Icons.vpn_key),
+            title: const Text('Password Vault'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const PasswordVaultPage()),
+              );
+            },
+          ),
           ListTile(
             title: const Text('Dark Mode'),
             trailing: ValueListenableBuilder<ThemeMode>(

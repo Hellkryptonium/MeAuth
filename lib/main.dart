@@ -317,6 +317,26 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (ctx) => AddAccountPage(onAdd: _addAccount),
     ));
   }
+
+  void _editAccount(AuthAccount oldAcc, String newLabel, String newIcon) async {
+    final idx = _accounts.indexWhere((a) => a.secret == oldAcc.secret);
+    if (idx != -1) {
+      setState(() {
+        _accounts[idx] = AuthAccount(
+          label: newLabel,
+          secret: oldAcc.secret,
+          type: oldAcc.type,
+          issuer: oldAcc.issuer,
+          digits: oldAcc.digits,
+          period: oldAcc.period,
+          counter: oldAcc.counter,
+          algorithm: oldAcc.algorithm,
+          icon: newIcon,
+        );
+      });
+      await _saveAccounts();
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -325,14 +345,8 @@ class _MyHomePageState extends State<MyHomePage> {
         onAddAccount: () => _manualAdd(context),
         onScanQr: () => _scanQrAndAdd(context),
         onDelete: _deleteAccount,
+        onEdit: _editAccount, // Pass edit callback
         themeModeNotifier: widget.themeModeNotifier,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _manualAdd(context),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-        elevation: 2,
-        child: const Icon(Icons.add),
       ),
     );
   }
