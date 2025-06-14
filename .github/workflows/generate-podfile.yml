@@ -13,7 +13,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: master
-          flutter-version: 'latest'
 
       - name: Generate Podfile
         run: |
