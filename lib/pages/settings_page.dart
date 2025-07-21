@@ -14,15 +14,6 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
-            leading: const Icon(Icons.vpn_key),
-            title: const Text('Password Vault'),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const PasswordVaultPage()),
-              );
-            },
-          ),
-          ListTile(
             title: const Text('Dark Mode'),
             trailing: ValueListenableBuilder<ThemeMode>(
               valueListenable: themeModeNotifier,
